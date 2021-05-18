@@ -11,13 +11,13 @@ $ git clone https://github.com/valmorsecco/tpx-nginx-proxy.git
 2. Create network:
 
 ```bash
-$ cd nginx-proxy
 $ docker network create nginx-proxy
 ```
 
 3. Run docker-compose:
 
 ```bash
+$ cd nginx-proxy
 $ docker-compose up -d
 ```
 
