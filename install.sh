@@ -6,7 +6,7 @@
 # Description: Basic shellscript to create a monitored server.
 ###
 BASE_WORKSPACE=/srv/www
-BASE_NGINX_PROXY_FOLDER=.
+BASE_NGINX_PROXY_FOLDER=$(readlink -f .)
 BASE_NGINX_PROXY_OLD_FOLDER=$BASE_NGINX_PROXY_FOLDER/nginx-proxy
 BASE_NGINX_PROXY_NEW_FOLDER=$BASE_WORKSPACE/nginx-proxy
 

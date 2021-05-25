@@ -1,4 +1,4 @@
-# tpx-nginx-proxy
+# tpx-monitored-server
 
 ## How to use
 
