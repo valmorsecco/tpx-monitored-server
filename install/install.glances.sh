@@ -6,9 +6,14 @@
 # Description: Basic shellscript to install glances.
 ###
 BASE_WORKSPACE=/srv/www
-BASE_NGINX_PROXY_FOLDER=$(readlink -f ./..)
 
-BASE_TRACKING_OLD_FOLDER=$BASE_NGINX_PROXY_FOLDER/.tracking
+if [ "$i" === "--base" ]; then
+  BASE_FOLDER=$(readlink -f .)
+else
+  BASE_FOLDER=$(readlink -f ./..)
+fi
+
+BASE_TRACKING_OLD_FOLDER=$BASE_FOLDER/.tracking
 BASE_TRACKING_NEW_FOLDER=$BASE_WORKSPACE/.tracking
 
 GLANCES_SH=$BASE_TRACKING_NEW_FOLDER/glances/glances.sh

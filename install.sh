@@ -6,12 +6,11 @@
 # Description: Basic shellscript to create a monitored server.
 ###
 BASE_WORKSPACE=/srv/www
-BASE_NGINX_PROXY_FOLDER=$(readlink -f .)
-BASE_NGINX_PROXY_OLD_FOLDER=$BASE_NGINX_PROXY_FOLDER/nginx-proxy
+BASE_FOLDER=$(readlink -f .)
 
-BASE_INSTALL_DOCKER_SH=$BASE_NGINX_PROXY_FOLDER/install/install.docker.sh
-BASE_INSTALL_GLANCES_SH=$BASE_NGINX_PROXY_FOLDER/install/install.glances.sh
-BASE_INSTALL_NGINX_SH=$BASE_NGINX_PROXY_FOLDER/install/install.nginx.sh
+BASE_INSTALL_DOCKER_SH=$BASE_FOLDER/install/install.docker.sh
+BASE_INSTALL_GLANCES_SH=$BASE_FOLDER/install/install.glances.sh
+BASE_INSTALL_NGINX_SH=$BASE_FOLDER/install/install.nginx.sh
 
 ###
 # workspace_create
@@ -33,7 +32,7 @@ workspace_create() {
 workspace_create_clean() {
   # Try remove aux
   echo "=> Try remove aux..."
-  if sudo rm -rf $BASE_NGINX_PROXY_FOLDER; then
+  if sudo rm -rf $BASE_FOLDER; then
     echo "=> Try remove aux (OK)."
   else
     echo "=> Try remove aux (FAIL)."
@@ -72,7 +71,7 @@ fn_install_docker() {
   fi
 
   echo "=> Installing docker..."
-  if $BASE_INSTALL_DOCKER_SH; then
+  if $BASE_INSTALL_DOCKER_SH --base; then
     echo "=> Installing docker (OK)."
   else
     echo "=> Installing docker (FAIL)."
@@ -94,7 +93,7 @@ fn_install_glances() {
   fi
 
   echo "=> Installing glances..."
-  if $BASE_INSTALL_GLANCES; then
+  if $BASE_INSTALL_GLANCES_SH --base; then
     echo "=> Installing glances (OK)."
   else
     echo "=> Installing glances (FAIL)."
@@ -116,7 +115,7 @@ fn_install_nginx() {
   fi
 
   echo "=> Installing nginx..."
-  if $BASE_INSTALL_NGINX; then
+  if $BASE_INSTALL_NGINX_SH --base; then
     echo "=> Installing nginx (OK)."
   else
     echo "=> Installing nginx (FAIL)."
@@ -127,9 +126,6 @@ fn_install_nginx() {
 case "$1" in
 full)
     fn_install_full
-;;
-folder)
-    fn_install_folder
 ;;
 docker)
     fn_install_docker
