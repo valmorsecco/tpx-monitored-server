@@ -8,12 +8,10 @@
 BASE_WORKSPACE=/srv/www
 BASE_NGINX_PROXY_FOLDER=$(readlink -f .)
 BASE_NGINX_PROXY_OLD_FOLDER=$BASE_NGINX_PROXY_FOLDER/nginx-proxy
-BASE_NGINX_PROXY_NEW_FOLDER=$BASE_WORKSPACE/nginx-proxy
 
-BASE_TRACKING_OLD_FOLDER=$BASE_NGINX_PROXY_FOLDER/.tracking
-BASE_TRACKING_NEW_FOLDER=$BASE_WORKSPACE/.tracking
-GLANCES_SH=$BASE_TRACKING_NEW_FOLDER/glances/glances.sh
-CLIENT_WS=$BASE_TRACKING_NEW_FOLDER/client-ws
+BASE_INSTALL_DOCKER_SH=$BASE_NGINX_PROXY_FOLDER/install/install.docker.sh
+BASE_INSTALL_GLANCES_SH=$BASE_NGINX_PROXY_FOLDER/install/install.glances.sh
+BASE_INSTALL_NGINX_SH=$BASE_NGINX_PROXY_FOLDER/install/install.nginx.sh
 
 ###
 # workspace_create
@@ -27,47 +25,6 @@ workspace_create() {
     echo "=> Try initializing folder (FAIL)."
     exit 1
   fi
-
-  # Try move nginx-proxy
-  echo "=> Try move nginx-proxy..."
-  if mv $BASE_NGINX_PROXY_OLD_FOLDER $BASE_NGINX_PROXY_NEW_FOLDER; then
-    echo "=> Try move nginx-proxy (OK)."
-  else
-    echo "=> Try move nginx-proxy (FAIL)."
-    exit 1
-  fi
-}
-
-###
-# workspace_tracking_create
-###
-workspace_tracking_create() {
-  # Try move .tracking
-  echo "=> Try move .tracking..."
-  if mv $BASE_TRACKING_OLD_FOLDER $BASE_TRACKING_NEW_FOLDER; then
-    echo "=> Try move .tracking (OK)."
-  else
-    echo "=> Try move .tracking (FAIL)."
-    exit 1
-  fi
-
-  # Try add permission execute to glances.sh
-  echo "=> Try add permission execute to glances.sh..."
-  if sudo chmod 777 $GLANCES_SH $CLIENT_WS; then
-    echo "=> Try add permission execute to glances.sh (OK)."
-  else
-    echo "=> Try add permission execute to glances.sh (FAIL)."
-    exit 1
-  fi
-
-  # Try add to crontab
-  echo "=> Try add to crontab..."
-  if (crontab -l ; echo "* * * * * $GLANCES_SH &> /dev/null") | crontab -; then
-    echo "=> Try add to crontab (OK)."
-  else
-    echo "=> Try add to crontab (FAIL)."
-    exit 1
-  fi
 }
 
 ###
@@ -76,7 +33,7 @@ workspace_tracking_create() {
 workspace_create_clean() {
   # Try remove aux
   echo "=> Try remove aux..."
-  if sudo rm -rf $BASE_NGINX_PROXY_FILE $BASE_NGINX_PROXY_FOLDER; then
+  if sudo rm -rf $BASE_NGINX_PROXY_FOLDER; then
     echo "=> Try remove aux (OK)."
   else
     echo "=> Try remove aux (FAIL)."
@@ -84,165 +41,107 @@ workspace_create_clean() {
   fi
 }
 
-
 ###
-# docker_enable
+# fn_install_full
 ###
-docker_enable() {
-  # Try enable docker
-  echo "=> Try enable docker..."
-  if sudo systemctl enable docker; then
-    echo "=> Try enable docker (OK)."
+fn_install_full() {
+  echo "=> Installing full..."
+  if workspace_create &&
+     fn_install_docker &&
+     fn_install_glances &&
+     fn_install_nginx &&
+     workspace_create_clean; then
+    echo "=> Installing full (OK)."
   else
-    echo "=> Try enable docker (FAIL)."
+    echo "=> Installing full (FAIL)."
     exit 1
   fi
 }
 
 ###
-# docker_install
+# fn_install_docker
 ###
-docker_install() {
-  # Try remove docker
-  echo "=> Try remove docker..."
-  if sudo yum remove -q -y docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine; then
-    echo "=> Try remove docker (OK)."
+fn_install_docker() {
+  # Try add permission execute to install.docker.sh
+  echo "=> Try add permission execute to install.docker.sh..."
+  if sudo chmod 777 $BASE_INSTALL_DOCKER_SH; then
+    echo "=> Try add permission execute to install.docker.sh (OK)."
   else
-    echo "=> Try remove docker (FAIL)."
+    echo "=> Try add permission execute to install.docker.sh (FAIL)."
     exit 1
   fi
 
-  # Try install yum-utils
-  echo "=> Try install yum-utils..."
-  if sudo yum install -q -y yum-utils; then
-    echo "=> Try install yum-utils (OK)."
+  echo "=> Installing docker..."
+  if $BASE_INSTALL_DOCKER_SH; then
+    echo "=> Installing docker (OK)."
   else
-    echo "=> Try install yum-utils (FAIL)."
-    exit 1
-  fi
-
-  # Try add repository
-  echo "=> Try add repository..."
-  if sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo; then
-    echo "=> Try add repository (OK)."
-  else
-    echo "=> Try add repository (FAIL)."
-    exit 1
-  fi
-
-  # Try install docker-ce, docker-ce-cli, containerd.io
-  echo "=> Try install docker-ce, docker-ce-cli, containerd.io..."
-  if sudo yum install -q -y docker-ce docker-ce-cli containerd.io; then
-    echo "=> Try install docker-ce, docker-ce-cli, containerd.io (OK)."
-  else
-    echo "=> Try install docker-ce, docker-ce-cli, containerd.io (FAIL)."
-    exit 1
-  fi
-
-  # Try install docker-compose
-  echo "=> Try install docker-compose..."
-  if sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose; then
-    echo "=> Try install docker-compose (OK)."
-  else
-    echo "=> Try install docker-compose (FAIL)."
-    exit 1
-  fi
-
-  # Try permissions docker-compose
-  echo "=> Try permissions docker-compose..."
-  if sudo chmod +x /usr/local/bin/docker-compose; then
-    echo "=> Try permissions docker-compose (OK)."
-  else
-    echo "=> Try permissions docker-compose (FAIL)."
+    echo "=> Installing docker (FAIL)."
     exit 1
   fi
 }
 
 ###
-# docker_start
+# fn_install_glances
 ###
-docker_start() {
-  # Try start docker
-  echo "=> Try start docker..."
-  if sudo systemctl start docker; then
-    echo "=> Try start docker (OK)."
+fn_install_glances() {
+  # Try add permission execute to install.glances.sh
+  echo "=> Try add permission execute to install.glances.sh..."
+  if sudo chmod 777 $BASE_INSTALL_GLANCES_SH; then
+    echo "=> Try add permission execute to install.glances.sh (OK)."
   else
-    echo "=> Try start docker (FAIL)."
+    echo "=> Try add permission execute to install.glances.sh (FAIL)."
+    exit 1
+  fi
+
+  echo "=> Installing glances..."
+  if $BASE_INSTALL_GLANCES; then
+    echo "=> Installing glances (OK)."
+  else
+    echo "=> Installing glances (FAIL)."
     exit 1
   fi
 }
 
 ###
-# glances_install
+# fn_install_nginx
 ###
-glances_install() {
-  # Try install epel-release
-  echo "=> Try install epel-release..."
-  if sudo yum install -y epel-release; then
-    echo "=> Try install epel-release (OK)."
+fn_install_nginx() {
+  # Try add permission execute to install.nginx.sh
+  echo "=> Try add permission execute to install.nginx.sh..."
+  if sudo chmod 777 $BASE_INSTALL_NGINX_SH; then
+    echo "=> Try add permission execute to install.nginx.sh (OK)."
   else
-    echo "=> Try install epel-release (FAIL)."
+    echo "=> Try add permission execute to install.nginx.sh (FAIL)."
     exit 1
   fi
 
-  # Try install python-pip
-  echo "=> Try install python-pip..."
-  if sudo yum install -y python-pip python-devel; then
-    echo "=> Try install python-pip (OK)."
+  echo "=> Installing nginx..."
+  if $BASE_INSTALL_NGINX; then
+    echo "=> Installing nginx (OK)."
   else
-    echo "=> Try install python-pip (FAIL)."
-    exit 1
-  fi
-
-  # Try install glances
-  echo "=> Try install glances..."
-  if sudo pip install glances; then
-    echo "=> Try install glances (OK)."
-  else
-    echo "=> Try install glances (FAIL)."
+    echo "=> Installing nginx (FAIL)."
     exit 1
   fi
 }
 
-###
-# nginx_proxy_start
-###
-nginx_proxy_start() {
-  # Try create nginx-proxy
-  echo "=> Try create nginx-proxy..."
-  if docker network create nginx-proxy; then
-    echo "=> Try create nginx-proxy (OK)."
-  else
-    echo "=> Try create nginx-proxy (FAIL)."
-  fi
+case "$1" in
+full)
+    fn_install_full
+;;
+folder)
+    fn_install_folder
+;;
+docker)
+    fn_install_docker
+;;
+glances)
+    fn_install_glances
+;;
+nginx)
+    fn_install_nginx
+;;
+*)
+;;
+esac
 
-  # Try start nginx-proxy
-  echo "=> Try start nginx-proxy..."
-  if docker-compose -f $BASE_NGINX_PROXY_NEW_FOLDER/docker-compose.yml up -d; then
-    echo "=> Try start nginx-proxy (OK)."
-  else
-    echo "=> Try start nginx-proxy (FAIL)."
-  fi
-}
-
-###
-# fn_uninstall
-###
-fn_install() {
-  echo "=> Installing..."
-  if docker_install &&
-     docker_start &&
-     docker_enable &&
-     glances_install &&
-     workspace_create &&
-     workspace_tracking_create &&
-     workspace_create_clean &&
-     nginx_proxy_start; then
-    echo "=> Installing (OK)."
-  else
-    echo "=> Installing (FAIL)."
-    exit 1
-  fi
-}
-
-fn_install
+exit 0

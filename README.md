@@ -17,7 +17,7 @@ $ ./install.sh
 
 ## Custom
 
-1. Workdir (default): /srv/www/nginx-proxy
+1. Workdir (default): /srv/www
 2. Network (default): nginx-proxy
 3. If you want to change it is necessary to edit the file install.sh, nginx-proxy/docker-compose.yml, .tracking/glances/glances.sh
 
