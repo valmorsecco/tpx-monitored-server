@@ -8,24 +8,18 @@
 $ git clone https://github.com/valmorsecco/tpx-nginx-proxy.git
 ```
 
-2. Create network:
+2. Run install.sh:
 
 ```bash
-$ docker network create nginx-proxy
-```
-
-3. Run docker-compose:
-
-```bash
-$ cd nginx-proxy
-$ docker-compose up -d
+$ chmod 777 install.sh
+$ ./install.sh
 ```
 
 ## Custom
 
 1. Workdir (default): /srv/www/nginx-proxy
 2. Network (default): nginx-proxy
-3. If you want to change it is necessary to edit the file nginx-proxy/docker-compose.yml
+3. If you want to change it is necessary to edit the file install.sh, nginx-proxy/docker-compose.yml, .tracking/glances/glances.sh
 
 ## Credits
 - [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) by [@jwilder](https://github.com/jwilder)
