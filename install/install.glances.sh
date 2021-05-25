@@ -6,12 +6,7 @@
 # Description: Basic shellscript to install glances.
 ###
 BASE_WORKSPACE=/srv/www
-
-if [ "$i" === "--base" ]; then
-  BASE_FOLDER=$(readlink -f .)
-else
-  BASE_FOLDER=$(readlink -f ./..)
-fi
+BASE_FOLDER=$(pwd)
 
 BASE_TRACKING_OLD_FOLDER=$BASE_FOLDER/.tracking
 BASE_TRACKING_NEW_FOLDER=$BASE_WORKSPACE/.tracking

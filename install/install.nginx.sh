@@ -6,12 +6,7 @@
 # Description: Basic shellscript to install nginx-proxy.
 ###
 BASE_WORKSPACE=/srv/www
-
-if [ "$i" === "--base" ]; then
-  BASE_FOLDER=$(readlink -f .)
-else
-  BASE_FOLDER=$(readlink -f ./..)
-fi
+BASE_FOLDER=$(pwd)
 
 BASE_NGINX_PROXY_OLD_FOLDER=$BASE_FOLDER/nginx-proxy
 BASE_NGINX_PROXY_NEW_FOLDER=$BASE_WORKSPACE/nginx-proxy

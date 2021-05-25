@@ -6,7 +6,7 @@
 # Description: Basic shellscript to create a monitored server.
 ###
 BASE_WORKSPACE=/srv/www
-BASE_FOLDER=$(readlink -f .)
+BASE_FOLDER=$(pwd)
 
 BASE_INSTALL_DOCKER_SH=$BASE_FOLDER/install/install.docker.sh
 BASE_INSTALL_GLANCES_SH=$BASE_FOLDER/install/install.glances.sh
@@ -71,7 +71,7 @@ fn_install_docker() {
   fi
 
   echo "=> Installing docker..."
-  if $BASE_INSTALL_DOCKER_SH --base; then
+  if $BASE_INSTALL_DOCKER_SH; then
     echo "=> Installing docker (OK)."
   else
     echo "=> Installing docker (FAIL)."
@@ -93,7 +93,7 @@ fn_install_glances() {
   fi
 
   echo "=> Installing glances..."
-  if $BASE_INSTALL_GLANCES_SH --base; then
+  if $BASE_INSTALL_GLANCES_SH; then
     echo "=> Installing glances (OK)."
   else
     echo "=> Installing glances (FAIL)."
@@ -115,7 +115,7 @@ fn_install_nginx() {
   fi
 
   echo "=> Installing nginx..."
-  if $BASE_INSTALL_NGINX_SH --base; then
+  if $BASE_INSTALL_NGINX_SH; then
     echo "=> Installing nginx (OK)."
   else
     echo "=> Installing nginx (FAIL)."
