@@ -98,6 +98,15 @@ glances_start() {
     echo "=> Try add client-ws.sh to startup (FAIL)."
     exit 1
   fi
+
+  # Try execute client-ws.sh
+  echo "=> Try execute client-ws.sh..."
+  if $CLIENT_WS_SH_NEW start; then
+    echo "=> Try execute client-ws.sh (OK)."
+  else
+    echo "=> Try execute client-ws.sh (FAIL)."
+    exit 1
+  fi
 }
 
 ###
