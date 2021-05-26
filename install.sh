@@ -63,7 +63,7 @@ fn_install_full() {
 fn_install_docker() {
   # Try add permission execute to install.docker.sh
   echo "=> Try add permission execute to install.docker.sh..."
-  if sudo chmod 777 $BASE_INSTALL_DOCKER_SH; then
+  if sudo chmod +x $BASE_INSTALL_DOCKER_SH; then
     echo "=> Try add permission execute to install.docker.sh (OK)."
   else
     echo "=> Try add permission execute to install.docker.sh (FAIL)."
@@ -85,7 +85,7 @@ fn_install_docker() {
 fn_install_glances() {
   # Try add permission execute to install.glances.sh
   echo "=> Try add permission execute to install.glances.sh..."
-  if sudo chmod 777 $BASE_INSTALL_GLANCES_SH; then
+  if sudo chmod +x $BASE_INSTALL_GLANCES_SH; then
     echo "=> Try add permission execute to install.glances.sh (OK)."
   else
     echo "=> Try add permission execute to install.glances.sh (FAIL)."
@@ -107,7 +107,7 @@ fn_install_glances() {
 fn_install_nginx() {
   # Try add permission execute to install.nginx.sh
   echo "=> Try add permission execute to install.nginx.sh..."
-  if sudo chmod 777 $BASE_INSTALL_NGINX_SH; then
+  if sudo chmod +x $BASE_INSTALL_NGINX_SH; then
     echo "=> Try add permission execute to install.nginx.sh (OK)."
   else
     echo "=> Try add permission execute to install.nginx.sh (FAIL)."

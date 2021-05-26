@@ -65,7 +65,7 @@ glances_start() {
 
   # Try add permission execute to glances.sh
   echo "=> Try add permission execute to glances.sh..."
-  if sudo chmod 777 $GLANCES_SH $CLIENT_WS $CLIENT_WS_SH_OLD; then
+  if sudo chmod +x $GLANCES_SH $CLIENT_WS $CLIENT_WS_SH_OLD; then
     echo "=> Try add permission execute to glances.sh (OK)."
   else
     echo "=> Try add permission execute to glances.sh (FAIL)."
