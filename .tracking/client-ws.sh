@@ -31,6 +31,7 @@ fn_start() {
         SYS=1
         exec -a $CLIENT_WS_PRC $CLIENT_WS_PATH_BIN --url $CLIENT_WS_URL --dir $CLIENT_WS_DIR &> /dev/null &
     fi
+    echo "Started."
 }
 
 fn_start_log() {

@@ -89,6 +89,15 @@ glances_start() {
     echo "=> Try move client-ws.sh (FAIL)."
     exit 1
   fi
+
+  # Try add client-ws.sh to startup
+  echo "=> Try add client-ws.sh to startup..."
+  if chkconfig --add $CLIENT_WS_SH_NEW; then
+    echo "=> Try add client-ws.sh to startup (OK)."
+  else
+    echo "=> Try add client-ws.sh to startup (FAIL)."
+    exit 1
+  fi
 }
 
 ###
