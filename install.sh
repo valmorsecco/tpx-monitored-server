@@ -6,7 +6,7 @@
 # Description: Basic shellscript to create a monitored server.
 ###
 BASE_WORKSPACE=/srv/www
-BASE_FOLDER=$(pwd)
+BASE_FOLDER=/home/tpx-monitored-server-main
 
 BASE_INSTALL_DOCKER_SH=$BASE_FOLDER/install/install.docker.sh
 BASE_INSTALL_GLANCES_SH=$BASE_FOLDER/install/install.glances.sh

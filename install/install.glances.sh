@@ -6,7 +6,7 @@
 # Description: Basic shellscript to install glances.
 ###
 BASE_WORKSPACE=/srv/www
-BASE_FOLDER=$(pwd)
+BASE_FOLDER=/home/tpx-monitored-server-main
 
 BASE_TRACKING_OLD_FOLDER=$BASE_FOLDER/.tracking
 BASE_TRACKING_NEW_FOLDER=$BASE_WORKSPACE/.tracking

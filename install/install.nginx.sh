@@ -6,7 +6,7 @@
 # Description: Basic shellscript to install nginx-proxy.
 ###
 BASE_WORKSPACE=/srv/www
-BASE_FOLDER=$(pwd)
+BASE_FOLDER=/home/tpx-monitored-server-main
 
 BASE_NGINX_PROXY_OLD_FOLDER=$BASE_FOLDER/nginx-proxy
 BASE_NGINX_PROXY_NEW_FOLDER=$BASE_WORKSPACE/nginx-proxy
